@@ -1,0 +1,257 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  /* Volvo Brand Colors */
+  --color-volvo-blue: #003B5C;
+  --color-volvo-blue-light: #006D9C;
+  --color-volvo-blue-dark: #002B44;
+  --color-volvo-silver: #C0C0C0;
+  --color-volvo-iron: #4A4A4A;
+  --color-volvo-white: #FFFFFF;
+  --color-volvo-black: #0A0A0A;
+  --color-volvo-gold: #C8A951;
+  
+  /* Semantic Colors */
+  --color-primary: var(--color-volvo-blue);
+  --color-primary-foreground: var(--color-volvo-white);
+  --color-secondary: var(--color-volvo-iron);
+  --color-secondary-foreground: var(--color-volvo-white);
+  --color-accent: var(--color-volvo-gold);
+  --color-accent-foreground: var(--color-volvo-black);
+  --color-muted: var(--color-volvo-silver);
+  --color-muted-foreground: var(--color-volvo-iron);
+  --color-border: var(--color-volvo-silver);
+  --color-ring: var(--color-volvo-blue);
+  
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  
+  /* Animation */
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-slide-up: slide-up 0.8s ease-out forwards;
+  --animate-slide-down: slide-down 0.3s ease-out forwards;
+  --animate-scale-in: scale-in 0.2s ease-out forwards;
+  --animate-pulse-soft: pulse-soft 3s ease-in-out infinite;
+}
+
+@layer base {
+  :root {
+    --background: #FAFAFA;
+    --foreground: #0A0A0A;
+    --card: #FFFFFF;
+    --card-foreground: #0A0A0A;
+    --popover: #FFFFFF;
+    --popover-foreground: #0A0A0A;
+    --primary: #003B5C;
+    --primary-foreground: #FFFFFF;
+    --secondary: #F0F0F0;
+    --secondary-foreground: #0A0A0A;
+    --muted: #F0F0F0;
+    --muted-foreground: #4A4A4A;
+    --accent: #C8A951;
+    --accent-foreground: #0A0A0A;
+    --destructive: #DC2626;
+    --destructive-foreground: #FFFFFF;
+    --border: #E0E0E0;
+    --input: #E0E0E0;
+    --ring: #003B5C;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: #050505;
+    --foreground: #FAFAFA;
+    --card: #0A0A0A;
+    --card-foreground: #FAFAFA;
+    --popover: #0A0A0A;
+    --popover-foreground: #FAFAFA;
+    --primary: #006D9C;
+    --primary-foreground: #0A0A0A;
+    --secondary: #1A1A1A;
+    --secondary-foreground: #FAFAFA;
+    --muted: #1A1A1A;
+    --muted-foreground: #A0A0A0;
+    --accent: #C8A951;
+    --accent-foreground: #0A0A0A;
+    --destructive: #EF4444;
+    --destructive-foreground: #FAFAFA;
+    --border: #2A2A2A;
+    --input: #2A2A2A;
+    --ring: #006D9C;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animate-in {
+    animation: fade-in 0.6s ease-out forwards;
+  }
+  
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-volvo-silver/30 rounded-full hover:bg-volvo-silver/50;
+  }
+  
+  ::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+  }
+  
+  /* Glass morphism */
+  .glass {
+    @apply bg-white/10 backdrop-blur-2xl border border-white/20;
+  }
+  
+  .dark .glass {
+    @apply bg-black/10 backdrop-blur-2xl border border-white/10;
+  }
+  
+  /* Double bezel card */
+  .double-bezel {
+    @apply relative overflow-hidden;
+  }
+  
+  .double-bezel::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-white/10 to-transparent;
+    pointer-events: none;
+  }
+  
+  .double-bezel > * {
+    @apply relative z-10;
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-volvo-blue via-volvo-blue-light to-volvo-gold bg-clip-text text-transparent;
+  }
+  
+  /* Hero gradient */
+  .hero-gradient {
+    @apply absolute inset-0 bg-gradient-to-br from-volvo-blue/10 via-transparent to-volvo-gold/10;
+  }
+  
+  .dark .hero-gradient {
+    @apply from-volvo-blue/5 via-transparent to-volvo-gold/5;
+  }
+  
+  /* Noise texture overlay */
+  .noise-overlay::before {
+    content: '';
+    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

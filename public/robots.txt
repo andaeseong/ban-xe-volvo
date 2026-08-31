@@ -1,0 +1,19 @@
+# Volvo Cars Vietnam - Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://volvocars.vn/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /cart/
+Disallow: /favorites/
+Disallow: /account/
+Disallow: /checkout/
+Disallow: /test-drive/confirmation
+Disallow: /payment-calculator/results
+
+# Crawl-delay
+Crawl-delay: 10
