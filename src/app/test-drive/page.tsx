@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Car, Calendar, Clock, MapPin, Phone, Mail, CheckCircle, ArrowRight, Shield, Zap, User } from 'lucide-react';
+import { CarSelector } from '@/components/cars/CarSelector';
+import { Car, Calendar, Clock, MapPin, Phone, Mail, CheckCircle, ArrowRight, Shield, Zap, User, Sparkles, Award } from 'lucide-react';
 import { cn, formatPrice } from '@/lib/utils';
 import { volvoCars, getCarById } from '@/lib/cars';
 
@@ -173,69 +174,101 @@ export default function TestDrivePage() {
       <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 py-8">
         <form onSubmit={handleSubmit(onSubmit)} className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-5 space-y-6">
-            <Card className="p-6 sticky top-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 rounded-xl bg-volvo-blue/10 text-volvo-blue">
-                  <Car className="h-6 w-6" aria-hidden="true" />
+            <div className="double-bezel sticky top-24">
+              <div className="double-bezel-inner p-5 sm:p-6 space-y-5">
+                {/* Header */}
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#003057] text-white shadow-volvo">
+                    <Car className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[15px] font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Chọn xe lái thử</h3>
+                    <p className="text-[13px] font-medium text-slate-500 dark:text-slate-400">{volvoCars.length} mẫu xe • Điện • Hybrid • Xăng</p>
+                  </div>
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-1 text-[11px] font-bold text-amber-900 dark:bg-amber-500/15 dark:border-amber-500/30 dark:text-amber-300">
+                    <Sparkles className="h-3 w-3" /> 2026
+                  </span>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Chọn xe lái thử</h3>
-                  <p className="text-sm text-muted-foreground">{volvoCars.length} mẫu xe có sẵn</p>
-                </div>
-              </div>
-              
-              <Select
-                {...register('carId')}
-                onChange={(e) => handleCarChange(e.target.value)}
-                className="mb-4"
-                aria-label="Chọn mẫu xe"
-              >
-                {volvoCars.map(car => (
-                  <option key={car.id} value={car.id}>
-                    {car.model} {car.trim} ({car.year}) - {formatPrice(car.price)}
-                  </option>
-                ))}
-              </Select>
-              
-              <div className="p-4 rounded-xl bg-muted/50 border border-border mb-6">
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Giá xe</span>
-                  <span className="font-medium text-foreground">{formatPrice(selectedCar.price)}</span>
-                </div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Loại xe</span>
-                  <span className="font-medium text-foreground">{selectedCar.model} {selectedCar.trim}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Năm</span>
-                  <span className="font-medium text-foreground">{selectedCar.year}</span>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/5 border border-green-500/20">
-                  <Shield className="h-5 w-5 text-green-500" aria-hidden="true" />
-                  <div>
-                    <p className="font-medium text-foreground">Bảo hiểm lái thử miễn phí</p>
-                    <p className="text-sm text-muted-foreground">Bảo hiểm toàn rủi ro trong quá trình lái thử</p>
+
+                {/* Premium Car Selector */}
+                <CarSelector
+                  cars={volvoCars}
+                  selectedCarId={selectedCar.id}
+                  onSelect={handleCarChange}
+                  label="Chọn xe lái thử"
+                />
+                {/* Hidden native select for form validation */}
+                <select {...register('carId')} value={selectedCar.id} onChange={e => handleCarChange(e.target.value)} className="sr-only" aria-hidden="true" tabIndex={-1}>
+                  {volvoCars.map(car => (
+                    <option key={car.id} value={car.id}>{car.model} {car.trim}</option>
+                  ))}
+                </select>
+                {errors.carId && <p className="text-sm text-red-600 dark:text-red-400 -mt-3">{errors.carId.message}</p>}
+                
+                {/* Summary - High contrast */}
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-3 dark:bg-slate-800/50 dark:border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Tóm tắt lựa chọn</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white border border-slate-200 px-2.5 py-1 text-xs font-semibold shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> Có sẵn giao ngay
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-xl bg-white border border-slate-200 p-2.5 text-center shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Giá niêm yết</p>
+                      <p className="mt-1 text-[13px] font-bold text-[#003057] dark:text-sky-400 leading-tight">{formatPrice(selectedCar.price)}</p>
+                    </div>
+                    <div className="rounded-xl bg-white border border-slate-200 p-2.5 text-center shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Nhiên liệu</p>
+                      <p className="mt-1 text-[13px] font-bold text-slate-900 dark:text-white leading-tight truncate">{selectedCar.fuelType === 'electric' ? 'Điện' : selectedCar.fuelType === 'plug-in-hybrid' ? 'PHEV' : 'Hybrid'}</p>
+                    </div>
+                    <div className="rounded-xl bg-white border border-slate-200 p-2.5 text-center shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Năm</p>
+                      <p className="mt-1 text-[13px] font-bold text-slate-900 dark:text-white">{selectedCar.year}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2.5 rounded-xl bg-[#003057] px-3.5 py-2.5 text-white dark:bg-slate-900 dark:border dark:border-slate-700 dark:text-slate-100">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15">
+                      <Award className="h-4 w-4 text-amber-300" aria-hidden="true" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold leading-tight">Bảo hành 3 năm • Bảo dưỡng miễn phí 60.000km</p>
+                      <p className="text-[11px] font-medium text-white/80 dark:text-slate-400">Áp dụng toàn quốc • Hỗ trợ 24/7</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-blue-500/5 border border-blue-500/20">
-                  <Zap className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                  <div>
-                    <p className="font-medium text-foreground">Tư vấn viên chuyên属</p>
-                    <p className="text-sm text-muted-foreground">Hỗ trợ trọn gói từ A-Z</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/5 border border-amber-500/20">
-                  <User className="h-5 w-5 text-amber-500" aria-hidden="true" />
-                  <div>
-                    <p className="font-medium text-foreground">Quà tặng đặc biệt</p>
-                    <p className="text-sm text-muted-foreground">Voucher bảo dưỡng 1.000.000đ khi lái thử</p>
-                  </div>
+                
+                {/* Benefits - Premium */}
+                <div className="space-y-2.5">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Quyền lợi lái thử</p>
+                  {[
+                    { icon: Shield, title: 'Bảo hiểm miễn phí', desc: 'Toàn rủi ro trong quá trình lái thử', color: 'emerald' },
+                    { icon: Zap, title: 'Tư vấn viên riêng', desc: 'Hỗ trợ trọn gói từ A–Z', color: 'sky' },
+                    { icon: User, title: 'Quà tặng 1.000.000đ', desc: 'Voucher bảo dưỡng khi lái thử', color: 'amber' },
+                  ].map(item => (
+                    <div key={item.title} className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm hover:border-slate-300 hover:shadow-md transition-all dark:bg-slate-900 dark:border-slate-700 dark:hover:border-slate-600">
+                      <div className={cn(
+                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border',
+                        item.color === 'emerald' && 'bg-emerald-50 border-emerald-200 text-emerald-600 dark:bg-emerald-500/15 dark:border-emerald-500/30 dark:text-emerald-400',
+                        item.color === 'sky' && 'bg-sky-50 border-sky-200 text-sky-600 dark:bg-sky-500/15 dark:border-sky-500/30 dark:text-sky-400',
+                        item.color === 'amber' && 'bg-amber-50 border-amber-200 text-amber-600 dark:bg-amber-500/15 dark:border-amber-500/30 dark:text-amber-400',
+                      )}>
+                        <item.icon className="h-4 w-4" aria-hidden="true" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[13px] font-bold leading-tight text-slate-900 dark:text-white">{item.title}</p>
+                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-tight">{item.desc}</p>
+                      </div>
+                      <span className="hidden sm:inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900">
+                        <ArrowRight className="h-3 w-3" />
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </Card>
+            </div>
           </div>
           
           <div className="lg:col-span-7">

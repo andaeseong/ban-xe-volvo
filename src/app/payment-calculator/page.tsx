@@ -10,7 +10,8 @@ import { Select } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Slider } from '@/components/ui/Slider';
 import { Badge } from '@/components/ui/Badge';
-import { Car, CreditCard, Calculator, ArrowRight, CheckCircle, Shield, Zap, Truck, Tag } from 'lucide-react';
+import { CarSelector } from '@/components/cars/CarSelector';
+import { Car, CreditCard, Calculator, ArrowRight, CheckCircle, Shield, Zap, Truck, Tag, Sparkles, Award } from 'lucide-react';
 import { cn, formatPrice, calculateMonthlyPayment, calculateTotalCost } from '@/lib/utils';
 import { volvoCars } from '@/lib/cars';
 
@@ -150,45 +151,66 @@ export default function PaymentCalculatorPage() {
       <div className="mx-auto max-w-[1400px] px-4 md:px-6 lg:px-8 py-8">
         <form onSubmit={handleSubmit(() => {})} className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-5 space-y-6">
-            <Card className="p-6 sticky top-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 rounded-xl bg-volvo-blue/10 text-volvo-blue">
-                  <Car className="h-6 w-6" aria-hidden="true" />
+            <div className="double-bezel sticky top-24">
+              <div className="double-bezel-inner p-5 sm:p-6 space-y-5">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#003057] text-white shadow-volvo">
+                    <Car className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[15px] font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Chọn xe của bạn</h3>
+                    <p className="text-[13px] font-medium text-slate-500 dark:text-slate-400">{volvoCars.length} mẫu xe • Giá từ {formatPrice(Math.min(...volvoCars.map(c => c.price)))}</p>
+                  </div>
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-1 text-[11px] font-bold text-amber-900 dark:bg-amber-500/15 dark:border-amber-500/30 dark:text-amber-300">
+                    <Sparkles className="h-3 w-3" /> 20 mẫu
+                  </span>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Chọn xe của bạn</h3>
-                  <p className="text-sm text-muted-foreground">{volvoCars.length} mẫu xe có sẵn</p>
+
+                <CarSelector
+                  cars={volvoCars}
+                  selectedCarId={selectedCar.id}
+                  onSelect={handleCarChange}
+                  label="Chọn xe tính trả góp"
+                />
+                <select {...register('carId')} value={selectedCar.id} onChange={e => handleCarChange(e.target.value)} className="sr-only" aria-hidden="true" tabIndex={-1}>
+                  {volvoCars.map(car => (
+                    <option key={car.id} value={car.id}>{car.model} {car.trim}</option>
+                  ))}
+                </select>
+
+                <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-3 dark:bg-slate-800/50 dark:border-slate-700">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Tóm tắt</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white border border-slate-200 px-2.5 py-1 text-xs font-semibold shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> Sẵn kho
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="rounded-xl bg-white border border-slate-200 p-2.5 text-center shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Giá</p>
+                      <p className="mt-1 text-[13px] font-bold text-[#003057] dark:text-sky-400 leading-tight truncate">{formatPrice(selectedCar.price)}</p>
+                    </div>
+                    <div className="rounded-xl bg-white border border-slate-200 p-2.5 text-center shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Dòng</p>
+                      <p className="mt-1 text-[13px] font-bold text-slate-900 dark:text-white leading-tight truncate">{selectedCar.model}</p>
+                    </div>
+                    <div className="rounded-xl bg-white border border-slate-200 p-2.5 text-center shadow-sm dark:bg-slate-900 dark:border-slate-700">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Năm</p>
+                      <p className="mt-1 text-[13px] font-bold text-slate-900 dark:text-white">{selectedCar.year}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2.5 rounded-xl bg-[#003057] px-3.5 py-2.5 text-white dark:bg-slate-900 dark:border dark:border-slate-700">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15">
+                      <Award className="h-4 w-4 text-amber-300" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold leading-tight">Bảo hành 3 năm • Lãi suất từ 6.99%</p>
+                      <p className="text-[11px] font-medium text-white/80 dark:text-slate-400">Duyệt hồ sơ trong ngày</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <Select
-                {...register('carId')}
-                onChange={(e) => handleCarChange(e.target.value)}
-                className="mb-4"
-                aria-label="Chọn mẫu xe"
-              >
-                {volvoCars.map(car => (
-                  <option key={car.id} value={car.id}>
-                    {car.model} {car.trim} ({car.year}) - {formatPrice(car.price)}
-                  </option>
-                ))}
-              </Select>
-              
-              <div className="p-4 rounded-xl bg-muted/50 border border-border mb-6">
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Giá xe</span>
-                  <span className="font-medium text-foreground">{formatPrice(watchedValues.price || selectedCar.price)}</span>
-                </div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-muted-foreground">Loại xe</span>
-                  <span className="font-medium text-foreground">{selectedCar.model} {selectedCar.trim}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Năm</span>
-                  <span className="font-medium text-foreground">{selectedCar.year}</span>
-                </div>
-              </div>
-            </Card>
+            </div>
             
             <Card className="p-6 sticky top-24" style={{ top: '320px' }}>
               <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
