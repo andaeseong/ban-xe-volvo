@@ -7,10 +7,11 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'destructive' | 'accent';
   size?: 'sm' | 'md' | 'lg';
   dot?: boolean;
+  onRemove?: () => void;
 }
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant = 'default', size = 'md', dot = false, children, ...props }, ref) => {
+  ({ className, variant = 'default', size = 'md', dot = false, children, onRemove, ...props }, ref) => {
     const variants = {
       default: 'bg-volvo-blue text-white',
       secondary: 'bg-volvo-iron text-white',
@@ -40,6 +41,21 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       >
         {dot && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
         {children}
+        {onRemove && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
+            className="ml-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/20"
+            aria-label="Remove"
+          >
+            <svg className="h-3 w-3" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 3l8 8M11 3L3 11" />
+            </svg>
+          </button>
+        )}
       </span>
     );
   }

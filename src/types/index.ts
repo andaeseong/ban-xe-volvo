@@ -8,7 +8,7 @@ export interface Car {
   images: string[];
   thumbnail: string;
   specs: CarSpecs;
-  safetyFeatures: SafetyFeature[];
+  safetyFeatures: string[];
   category: 'sedan' | 'suv' | 'wagon' | 'electric' | 'hybrid';
   fuelType: 'electric' | 'hybrid' | 'plug-in-hybrid' | 'mild-hybrid' | 'gasoline' | 'diesel';
   transmission: 'automatic' | 'manual';
@@ -54,6 +54,7 @@ export interface SafetyFeature {
 }
 
 export interface CartItem {
+  id: string;
   car: Car;
   quantity: number;
   selectedColor: string;

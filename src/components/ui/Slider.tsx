@@ -1,11 +1,20 @@
 'use client';
 
-import { forwardRef, SliderHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-export const Slider = forwardRef<HTMLInputElement, SliderHTMLAttributes<HTMLInputElement>>(
+interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
+  value?: number | number[];
+  onValueChange?: (value: number | number[]) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
+export const Slider = forwardRef<HTMLInputElement, SliderProps>(
   ({ className, min = 0, max = 100, step = 1, value, onValueChange, ...props }, ref) => {
-    const percentage = ((Number(value) - min) / (max - min)) * 100;
+    const numericValue = Array.isArray(value) ? value[1] ?? value[0] : Number(value ?? 0);
+    const percentage = ((numericValue - min) / (max - min)) * 100;
     
     return (
       <div className={cn('relative w-full', className)}>
@@ -15,8 +24,15 @@ export const Slider = forwardRef<HTMLInputElement, SliderHTMLAttributes<HTMLInpu
           min={min}
           max={max}
           step={step}
-          value={value}
-          onChange={(e) => onValueChange?.(Number(e.target.value))}
+          value={numericValue}
+          onChange={(e) => {
+            const newVal = Number(e.target.value);
+            if (Array.isArray(value)) {
+              onValueChange?.([value[0], newVal]);
+            } else {
+              onValueChange?.(newVal);
+            }
+          }}
           className={cn(
             'appearance-none w-full h-2 bg-muted rounded-full cursor-pointer',
             'focus:outline-none focus:ring-2 focus:ring-volvo-blue/50 focus:ring-offset-2',

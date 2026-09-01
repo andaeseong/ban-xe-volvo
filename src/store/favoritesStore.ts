@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Car } from '@/types';
+import { volvoCars } from '@/lib/cars';
 
 interface FavoritesState {
   items: string[];
@@ -42,8 +43,7 @@ export const useFavoritesStore = create<FavoritesState>()(
       },
       
       getFavorites: () => {
-        const { volvoCars } = require('@/lib/cars');
-        return get().items.map(id => volvoCars.find(car => car.id === id)).filter(Boolean);
+        return get().items.map(id => volvoCars.find((car: Car) => car.id === id)).filter(Boolean) as Car[];
       },
       
       clearFavorites: () => set({ items: [] }),

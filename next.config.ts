@@ -5,9 +5,25 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.picsum.photos',
       },
     ],
+    dangerouslyAllowSVG: true,
+  },
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'gsap'],
   },
 };
 

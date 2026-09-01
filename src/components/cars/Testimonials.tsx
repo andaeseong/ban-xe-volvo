@@ -68,7 +68,7 @@ const testimonials = [
 ];
 
 export function Testimonials() {
-  const sectionRef = useRef<HTMLSectionElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   
   useEffect(() => {
     const ctx = gsap.context(() => {

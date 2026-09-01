@@ -184,7 +184,7 @@ export default function CartPage() {
                 <p className="text-green-500 text-sm mt-2 flex items-center gap-1">
                   <Tag className="h-4 w-4" />
                   Đã áp dụng: Giảm {formatPrice(promoDiscount)}
-                )}
+                </p>
               )}
             </Card>
           </div>

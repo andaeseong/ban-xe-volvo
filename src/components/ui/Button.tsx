@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, ButtonHTMLAttributes } from 'react';
+import { forwardRef, ButtonHTMLAttributes, cloneElement, isValidElement } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -10,6 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   fullWidth?: boolean;
+  asChild?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -21,6 +22,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     leftIcon, 
     rightIcon,
     fullWidth = false,
+    asChild = false,
     disabled,
     children,
     ...props 
@@ -43,14 +45,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
     
     const width = fullWidth ? 'w-full' : '';
-    
-    return (
-      <button
-        ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], width, className)}
-        disabled={disabled || isLoading}
-        {...props}
-      >
+    const buttonClass = cn(baseStyles, variants[variant], sizes[size], width, className);
+    const content = (
+      <>
         {isLoading ? (
           <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" />
@@ -61,6 +58,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : null}
         <span>{children}</span>
         {!isLoading && rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
+      </>
+    );
+    
+    if (asChild && isValidElement(children)) {
+      const child = children as React.ReactElement<{ className?: string; children?: React.ReactNode }>;
+      return cloneElement(child, {
+        className: cn(buttonClass, (child.props as { className?: string }).className),
+        ref,
+      } as unknown as Record<string, unknown>);
+    }
+    
+    return (
+      <button
+        ref={ref}
+        className={buttonClass}
+        disabled={disabled || isLoading}
+        {...props}
+      >
+        {content}
       </button>
     );
   }

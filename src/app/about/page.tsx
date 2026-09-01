@@ -2,7 +2,7 @@
 
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Shield, Zap, Globe, Leaf, Award, Users, Target, Clock, CheckCircle, ArrowRight } from 'lucide-react';
+import { Shield, Zap, Globe, Leaf, Award, Users, Target, Clock, CheckCircle, ArrowRight, Car } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const milestones = [

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CarGrid } from '@/components/cars/CarGrid';
 import { Button } from '@/components/ui/Button';
@@ -14,7 +14,7 @@ import {
   X, 
   ChevronDown, 
   Zap, 
-  Car, 
+  Car as CarIcon, 
   Users, 
   Settings,
   Grid,
@@ -23,15 +23,15 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { cn, formatPrice } from '@/lib/utils';
-import { volvoCars, getCarsByCategory, getCarsByYear, FilterOptions } from '@/lib/cars';
+import { volvoCars } from '@/lib/cars';
 import { Car } from '@/types';
 
 const categories = [
-  { value: 'all', label: 'Tất cả', icon: Car },
+  { value: 'all', label: 'Tất cả', icon: CarIcon },
   { value: 'electric', label: 'Xe điện', icon: Zap },
-  { value: 'suv', label: 'SUV', icon: Car },
-  { value: 'sedan', label: 'Sedan', icon: Car },
-  { value: 'wagon', label: 'Wagon', icon: Car },
+  { value: 'suv', label: 'SUV', icon: CarIcon },
+  { value: 'sedan', label: 'Sedan', icon: CarIcon },
+  { value: 'wagon', label: 'Wagon', icon: CarIcon },
   { value: 'hybrid', label: 'Hybrid', icon: Settings },
 ];
 
@@ -54,7 +54,7 @@ const sortOptions = [
 
 const years = [...new Set(volvoCars.map(c => c.year))].sort((a, b) => b - a);
 
-export default function CarsPage() {
+function CarsPageContent() {
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
@@ -193,7 +193,7 @@ export default function CarsPage() {
                 <div className="space-y-6">
                   <FilterSection
                     title="Danh mục"
-                    icon={Car}
+                    icon={CarIcon}
                     options={categories.map(c => ({ value: c.value, label: c.label }))}
                     selected={selectedCategories}
                     onChange={setSelectedCategories}
@@ -254,7 +254,7 @@ export default function CarsPage() {
                       max={100000000}
                       step={1000000}
                       value={priceRange}
-                      onValueChange={setPriceRange}
+                      onValueChange={(v) => setPriceRange(v as [number, number])}
                       aria-label="Khoảng giá"
                     />
                   </div>
@@ -347,7 +347,7 @@ export default function CarsPage() {
               />
             ) : (
               <div className="text-center py-16">
-                <Car className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
+                <CarIcon className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
                 <h3 className="text-xl font-medium text-foreground mb-2">Không tìm thấy xe phù hợp</h3>
                 <p className="text-muted-foreground mb-6">Hãy thử điều chỉnh bộ lọc hoặc xóa tất cả bộ lọc</p>
                 <Button variant="outline" onClick={clearFilters}>
@@ -374,6 +374,14 @@ export default function CarsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CarsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin h-8 w-8 border-2 border-volvo-blue border-t-transparent rounded-full" /></div>}>
+      <CarsPageContent />
+    </Suspense>
   );
 }
 

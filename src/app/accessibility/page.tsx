@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/Card';
-import { Shield, Eye, Keyboard, Volume2, Contrast, MousePointer, CheckCircle, AlertTriangle, Download, Globe, User } from 'lucide-react';
+import { Shield, Eye, Keyboard, Volume2, Contrast, MousePointer, CheckCircle, AlertTriangle, Download, Globe, User, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const wcagCriteria = [

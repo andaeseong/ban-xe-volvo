@@ -12,8 +12,9 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Car, CreditCard, Calculator, ArrowRight, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { formatPrice, calculateMonthlyPayment, calculateTotalCost, PaymentPlan } from '@/lib/utils';
+import { formatPrice, calculateMonthlyPayment, calculateTotalCost } from '@/lib/utils';
 import { volvoCars } from '@/lib/cars';
+import { PaymentPlan } from '@/types';
 
 const paymentSchema = z.object({
   carId: z.string().min(1, 'Vui lòng chọn xe'),
@@ -406,7 +407,7 @@ export function PaymentCalculator() {
               </div>
             </Card>
           </div>
-        </div>
+        </form>
       </div>
     </section>
   );

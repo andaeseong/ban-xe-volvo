@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components/ui/Card';
-import { Shield, Cookie, Database, Eye, Globe, Clock, CheckCircle, AlertTriangle, Download } from 'lucide-react';
+import { Shield, Cookie, Database, Eye, Globe, Clock, CheckCircle, AlertTriangle, Download, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const cookieCategories = [

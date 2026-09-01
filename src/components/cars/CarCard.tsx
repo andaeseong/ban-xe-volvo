@@ -132,9 +132,9 @@ export function CarCard({ car, variant = 'default', priority = false }: CarCardP
             <Badge variant="outline" dot>
               {car.seating} chỗ ngồi
             </Badge>
-            {car.range && (
+            {car.specs.range && (
               <Badge variant="outline" dot>
-                {car.range}
+                {car.specs.range}
               </Badge>
             )}
           </div>

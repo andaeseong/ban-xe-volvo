@@ -35,7 +35,7 @@ export default function SafetyPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFeatures, setExpandedFeatures] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState('all');
-  const sectionRef = useRef<HTMLSectionElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -130,7 +130,7 @@ export default function SafetyPage() {
             />
           </div>
           
-          <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full md:w-auto">
+          <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full">
             <TabsList className="flex flex-wrap gap-2">
               <TabsTrigger value="all">Tất cả ({safetyFeaturesDatabase.length})</TabsTrigger>
               {safetyCategories.map(cat => (
@@ -139,69 +139,71 @@ export default function SafetyPage() {
                 </TabsTrigger>
               ))}
             </TabsList>
+            <TabsContent value="all" className="mt-6">
+              <div ref={sectionRef} className="space-y-8">
+                {featuresByCategory.map(category => (
+                  category.features.length > 0 && (
+                    <section key={category.id} className="safety-category-section">
+                      <div className={cn('mb-4 flex items-center gap-3 p-4 rounded-xl', category.bgColor, category.borderColor)}>
+                        <category.icon className={cn('h-7 w-7', category.color)} aria-hidden="true" />
+                        <div>
+                          <h2 className="text-xl font-semibold text-foreground">{category.name}</h2>
+                          <p className="text-sm text-muted-foreground">{category.description}</p>
+                        </div>
+                        <span className="ml-auto px-3 py-1 rounded-full bg-background/50 text-sm font-medium text-foreground">
+                          {category.features.length} tính năng
+                        </span>
+                      </div>
+                      
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {category.features.map(feature => (
+                          <SafetyFeatureCard 
+                            key={feature.id} 
+                            feature={feature} 
+                            isExpanded={expandedFeatures.has(feature.id)}
+                            onToggle={() => toggleFeature(feature.id)}
+                            categoryColor={category.color.replace('text-', '').replace('-500', '')}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  )
+                ))}
+              </div>
+            </TabsContent>
+            
+            {safetyCategories.map(category => {
+              const categoryFeatures = safetyFeaturesDatabase.filter(f => f.category === category.id && (searchQuery === '' || f.name.toLowerCase().includes(searchQuery.toLowerCase()) || f.description.toLowerCase().includes(searchQuery.toLowerCase()) || f.details.some(d => d.toLowerCase().includes(searchQuery.toLowerCase()))));
+              return (
+              <TabsContent key={category.id} value={category.id} className="mt-6">
+                <div className="space-y-8">
+                  <section className="safety-category-section">
+                    <div className={cn('mb-6 flex items-center gap-3 p-4 rounded-xl', category.bgColor, category.borderColor)}>
+                      <category.icon className={cn('h-8 w-8', category.color)} aria-hidden="true" />
+                      <div>
+                        <h2 className="text-2xl font-semibold text-foreground">{category.name}</h2>
+                        <p className="text-muted-foreground">{category.description}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {categoryFeatures.map((feature: SafetyFeature) => (
+                        <SafetyFeatureCard 
+                          key={feature.id} 
+                          feature={feature} 
+                          isExpanded={expandedFeatures.has(feature.id)}
+                          onToggle={() => toggleFeature(feature.id)}
+                          categoryColor={category.color.replace('text-', '').replace('-500', '')}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                </div>
+              </TabsContent>
+              );
+            })}
           </Tabs>
         </div>
-        
-        <TabsContent value="all" className="mt-6">
-          <div ref={sectionRef} className="space-y-8">
-            {featuresByCategory.map(category => (
-              category.features.length > 0 && (
-                <section key={category.id} className="safety-category-section">
-                  <div className={cn('mb-4 flex items-center gap-3 p-4 rounded-xl', category.bgColor, category.borderColor)}>
-                    <category.icon className={cn('h-7 w-7', category.color)} aria-hidden="true" />
-                    <div>
-                      <h2 className="text-xl font-semibold text-foreground">{category.name}</h2>
-                      <p className="text-sm text-muted-foreground">{category.description}</p>
-                    </div>
-                    <span className="ml-auto px-3 py-1 rounded-full bg-background/50 text-sm font-medium text-foreground">
-                      {category.features.length} tính năng
-                    </span>
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {category.features.map(feature => (
-                      <SafetyFeatureCard 
-                        key={feature.id} 
-                        feature={feature} 
-                        isExpanded={expandedFeatures.has(feature.id)}
-                        onToggle={() => toggleFeature(feature.id)}
-                        categoryColor={category.color.replace('text-', '').replace('-500', '')}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )
-            ))}
-          </div>
-        </TabsContent>
-        
-        {safetyCategories.map(category => (
-          <TabsContent key={category.id} value={category.id} className="mt-6">
-            <div ref={sectionRef} className="space-y-8">
-              <section className="safety-category-section">
-                <div className={cn('mb-6 flex items-center gap-3 p-4 rounded-xl', category.bgColor, category.borderColor)}>
-                  <category.icon className={cn('h-8 w-8', category.color)} aria-hidden="true" />
-                  <div>
-                    <h2 className="text-2xl font-semibold text-foreground">{category.name}</h2>
-                    <p className="text-muted-foreground">{category.description}</p>
-                  </div>
-                </div>
-                
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {category.features.map(feature => (
-                    <SafetyFeatureCard 
-                      key={feature.id} 
-                      feature={feature} 
-                      isExpanded={expandedFeatures.has(feature.id)}
-                      onToggle={() => toggleFeature(feature.id)}
-                      categoryColor={category.color.replace('text-', '').replace('-500', '')}
-                    />
-                  ))}
-                </div>
-              </section>
-            </div>
-          </TabsContent>
-        ))}
       </div>
       
       <section className="py-16 md:py-24 bg-muted/50 border-y border-border">
